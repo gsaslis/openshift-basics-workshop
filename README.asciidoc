@@ -1,0 +1,45 @@
+= Openshift Basics
+
+
+1. start minishift with extra memory and cpu.
+
+[source, bash]
+----
+minishift start --memory 8GB --cpus 4
+----
+
+NOTE: If you have already previously started minishift without the extra memory, you will also need to `minikube delete`.
+
+
+2. fix time
+
+[source, bash]
+----
+# edit crontab for user root
+sudo su -
+crontab -e
+
+# insert following line
+
+*/2 * * * * ntpclient -s -h pool.ntp.org
+
+----
+
+
+3. deploy jenkins through catalog, with default settings (just increased storage)
+
+(will take some time to download jenkins image)
+
+4. deploy sample app template
+
+[source, bash]
+----
+oc new-app -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/application-template.json
+----
+
+
+
+
+== GitLab
+
+https://gitlab.com/gitlab-org/omnibus-gitlab/tree/f04b5c4443b3a98011577cdd7c9de766a287531e/docker/openshift

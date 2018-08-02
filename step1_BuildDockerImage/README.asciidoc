@@ -1,0 +1,12 @@
+= Build docker image on OpenShift
+
+Vanilla Kubernetes doesn't come with any functionality out of the box to facilitate building docker images.
+
+If you remember, https://github.com/gsaslis/kubernetes-basics-workshop/blob/master/step1_Deploy_Application/README.asciidoc[back in the Kubernetes workshop], we had to manually build the image on our laptop, having previously exposed a bunch of minikube env vars, so that the local docker client would use the docker registry inside `minikube`.
+
+In OpenShift, things are radically different. In fact, one of the main extra concepts OpenShift offers is that of the `Build`, which allows you to run your docker image builds inside the Kubernetes cluster, without any need for external resources.
+
+
+Let's take a look at how to create this `Build`.
+
+

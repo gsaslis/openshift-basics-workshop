@@ -1,0 +1,48 @@
+{
+  "kind": "BuildConfig",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "helloworld",
+    "labels": {
+      "name": "php-helloworld-build"
+    }
+  },
+  "spec": {
+    "triggers": [
+      {
+        "type": "GitHub",
+        "github": {
+          "secret": "secret101"
+        }
+      },
+      {
+        "type": "Generic",
+        "generic": {
+          "secret": "secret101"
+        }
+      }
+    ],
+    "source": {
+      "type": "Git",
+      "git": {
+        "uri": "https://github.com/openshift/nodejs-ex.git"
+      }
+    },
+    "strategy": {
+      "type": "Source",
+      "sourceStrategy": {
+        "from": {
+          "kind": "ImageStreamTag",
+          "name": "php:7.1"
+        }
+      }
+    },
+    "output": {
+      "to": {
+        "kind": "ImageStreamTag",
+        "name": "php-helloworld:latest"
+      }
+    },
+    "resources": {}
+  }
+},
