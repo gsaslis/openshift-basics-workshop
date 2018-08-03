@@ -56,4 +56,4 @@ fix-permissions ./
 fix-permissions ${HTTPD_CONFIGURATION_PATH}
 
 # install php mysql extensions
-docker-php-ext-install mysqli
+yum install php-mysql
