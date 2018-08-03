@@ -1,0 +1,23 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "php-helloworld-service"
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "web",
+        "protocol": "TCP",
+        "port": 8080,
+        "targetPort": 8080,
+        "nodePort": 0
+      }
+    ],
+    "selector": {
+      "name": "php-helloworld"
+    },
+    "type": "ClusterIP",
+    "sessionAffinity": "None"
+  }
+}

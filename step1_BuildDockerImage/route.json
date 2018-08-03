@@ -1,0 +1,16 @@
+{
+  "kind": "Route",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "php-helloworld-route"
+  },
+  "spec": {
+    "to": {
+      "kind": "Service",
+      "name": "php-helloworld-service"
+    },
+    "tls": {
+      "termination": "edge"
+    }
+  }
+}
