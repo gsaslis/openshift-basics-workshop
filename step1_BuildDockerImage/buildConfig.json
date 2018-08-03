@@ -25,8 +25,9 @@
     "source": {
       "type": "Git",
       "git": {
-        "uri": "https://github.com/openshift/nodejs-ex.git"
-      }
+        "uri": "https://github.com/gsaslis/openshift-basics-workshop"
+      },
+      "contextDir": "php"
     },
     "strategy": {
       "type": "Source",
@@ -45,4 +46,4 @@
     },
     "resources": {}
   }
-},
+}
