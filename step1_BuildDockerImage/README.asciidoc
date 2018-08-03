@@ -7,6 +7,43 @@ If you remember, https://github.com/gsaslis/kubernetes-basics-workshop/blob/mast
 In OpenShift, things are radically different. In fact, one of the main extra concepts OpenShift offers is that of the `Build`, which allows you to run your docker image builds inside the Kubernetes cluster, without any need for external resources.
 
 
-Let's take a look at how to create this `Build`.
+Let's take a look at how to create this `Build`, starting from the `Dockerfile` and `docker build --tag hello-php-world:v0.1 .` command we were using in the https://github.com/gsaslis/kubernetes-basics-workshop/blob/master/step1_Deploy_Application/README.asciidoc[back in the Kubernetes workshop].
+
+
+== Introducing ImageStreams
+
+Let's remember our `Dockerfile`, with a little behind-the-scenes look at what happened when we built the image.
+
+[source]
+----
+FROM php:7.0-apache <1>
+
+RUN docker-php-ext-install mysqli <2>
+
+COPY php/ /var/www/html/ <3>
+----
+<1> The base image. We are using a similar base image this time, but with the https://github.com/openshift/source-to-image[Source-to-Image] tool.
+<2> Installing the mysql extension for php. Remember that in a Dockerfile, each of the above instructions creates a separate docker image layer. There was an implicit intermediate layer being created here, which we will now make explicit.
+<3> This final instruction would copy the source. Source-to-image will handle that for us, but more on that below.
+
+
+In OpenShift, we can turn the 3 separate layers that were being created implicitly by our `Dockerfile`, into explicitly defined ImageStreams:
+
+* `base`: the base image,
+* `php-mysql`: the intermediate image including the mysql php extension,
+* `application`: the image including the above, plus application sources.
+
+The process looks as follows:
+
+----
+base --> php-mysql --> application
+----
+
+This approach has the important advantage that:
+
+* changes to the application do not require a full rebuild of the docker image. This is the most common thing during development, so your builds will simply be faster.
+* changes to the below layers, do not require a repackaging of the top layer. This is especially important for applying security and other upstream updates, etc.
+
+
 
 

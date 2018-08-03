@@ -1,0 +1,40 @@
+{
+  "kind": "BuildConfig",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "php-mysql",
+    "labels": {
+      "name": "php-mysql-build"
+    }
+  },
+  "spec": {
+    "triggers": [
+      {
+        "type": "GitHub",
+        "github": {
+          "secret": "secret101"
+        }
+      },
+      {
+        "type": "Generic",
+        "generic": {
+          "secret": "secret101"
+        }
+      }
+    ],
+    "source": {
+      "type": "Dockerfile",
+      "dockerfile": "FROM php:7.1\nRUN docker-php-ext-install mysqli"
+    },
+    "strategy": {
+      "type": "Docker"
+    },
+    "output": {
+      "to": {
+        "kind": "ImageStreamTag",
+        "name": "php-mysql:latest"
+      }
+    },
+    "resources": {}
+  }
+}
