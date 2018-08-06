@@ -1,0 +1,29 @@
+= Making your application accessible
+
+In OpenShift, just like with Kubernetes, you still need a `Service` in front of your running Pods, in order to make it accessible in the cluster, internally, and to have the load balancing available.
+
+The difference between Kubernetes and OpenShift is in *how the service is exposed outside of the cluster*.
+
+== Kubernetes vs. OpenShift: Ingress, Ingress Controllers, Routes and Routers.
+
+In *Kubernetes*, to expose a service to the outside world, you would define an `Ingress`, which is essentially a _rule_ for how the service is exposed. In *OpenShift*, you would define a `Route` and I find these two concepts very comparable / similar (though `Ingress` does feel a bit more "raw", and more flexible/powerful, whereas as `Route` more refined and straightforward to use).
+
+The other difference between Kubernetes and OpenShift is in how these _rules_ (whether `Ingress` or `Routes`) are applied.
+
+In *Kubernetes* you need to deploy your own `Ingress Controller`, which is the entity responsible for implementing the rules. This can be a container running `nginx`, `haproxy`, `istio`, etc. There's a variety of options, but it is mostly up to you to pick the appropriate one and deploy it yourself.
+
+In *OpenShift* you don't need to worry about this at all. There is an OpenShift `Router` deployed for you out of the box (this is essentially an HAProxy under the hood).
+
+== Deploying the Service + Route
+
+With that out of the way, let's proceed with deploying the `Service` and `Route` for our PHP hello world application.
+
+[source, bash]
+----
+oc apply -f service.json
+oc apply -f route.json
+----
+
+You should now be able to navigate to the Applications => Routes menu, from the OpenShift dashboard, and click on the link under the Hostname that would allow you to access the hello world service.
+
+TIP: Please don't forget to add the `/hello.php` suffix to the route URL, if you just see the apache welcome page.
