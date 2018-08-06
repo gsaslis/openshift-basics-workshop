@@ -1,0 +1,38 @@
+= Deploying MySQL on OpenShift
+
+To deploy the backing database for your PHP application, you actually have 2 options:
+
+* use the command-line `oc`
+* use the web interface
+
+
+== Command-line
+
+Creating a new mysql deployment is pretty easy using the command-line `oc` tool and the default mysql docker image.
+
+[source, bash]
+----
+oc new-app \
+  -e MYSQL_DATABASE=devstaff_db \
+  -e MYSQL_USER=devstaff \
+  -e MYSQL_PASSWORD=myawesomedbpassword \
+  -e MYSQL_ROOT_HOST=% \
+  -e MYSQL_ROOT_PASSWORD=myawesomedbpasswordforroot \
+  mysql:5.7
+----
+
+== Web Interface
+
+OpenShift offers a pretty refined web console and deploying a MySQL database is an excellent opportunity to try it out.
+
+1. Navigate to the Project Overview page
+1. Select the "Add to Project" dropdown.
+1. Select the MySQL icon and click Next
+1. Most defaults are fine, but please make sure you set the values for `MYSQL_USER`, `MYSQL_PASSWORD` and `MYSQL_DATABASE` to match the ones in your application.
+1. Hit `Create`.
+
+== Test
+
+Navigate to the `<externalRouteURL>/smartHello.php` path and ensure you see a success message:
+
+`Success: A proper connection to MySQL was made!`
