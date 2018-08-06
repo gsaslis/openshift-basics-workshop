@@ -23,26 +23,8 @@ RUN docker-php-ext-install mysqli <2>
 COPY php/ /var/www/html/ <3>
 ----
 <1> The base image. We are using a similar base image this time, but with the https://github.com/openshift/source-to-image[Source-to-Image] tool.
-<2> Installing the mysql extension for php. Remember that in a Dockerfile, each of the above instructions creates a separate docker image layer. There was an implicit intermediate layer being created here, which we will now make explicit.
+<2> Installing the mysql extension for php. Remember that, in a Dockerfile, each of the above instructions creates a separate docker image layer. There was an implicit intermediate layer being created here, which is now not necessary, as this is already included in the base image we're using.
 <3> This final instruction would copy the source. Source-to-image will handle that for us, but more on that below.
-
-
-In OpenShift, we can turn the 3 separate layers that were being created implicitly by our `Dockerfile`, into explicitly defined ImageStreams:
-
-* `base`: the base image,
-* `php-mysql`: the intermediate image including the mysql php extension,
-* `application`: the image including the above, plus application sources.
-
-The process looks as follows:
-
-----
-base --> php-mysql --> application
-----
-
-This approach has the important advantage that:
-
-* changes to the application do not require a full rebuild of the docker image. This is the most common thing during development, so your builds will simply be faster.
-* changes to the below layers, do not require a repackaging of the top layer. This is especially important for applying security and other upstream updates, etc.
 
 
 

@@ -45,7 +45,25 @@
         "containers": [
           {
             "name": "php-helloworld",
-            "image": " ",
+            "image": "php-helloworld:latest",
+            "env": [
+              {
+                "name": "DB_HOST",
+                "value": "mysql"
+              },
+              {
+                "name": "DB_NAME",
+                "value": "devstaff_db"
+              },
+              {
+                "name": "DB_USER",
+                "value": "devstaff"
+              },
+              {
+                "name": "DB_PASS",
+                "value": "myawesomedbpassword"
+              }
+            ],
             "ports": [
               {
                 "containerPort": 8080,
