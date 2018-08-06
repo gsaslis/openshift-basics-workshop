@@ -1,0 +1,88 @@
+= Deploying your Application on OpenShift
+
+Now that we have a docker image that we can run inside our OpenShift cluster, it's time we took a look at how the actual deployment of the application looks on OpenShift (compared to https://github.com/gsaslis/kubernetes-basics-workshop/tree/master/step4_Deploy_New_Versions[the Kubernetes tutorial]).
+
+Instead of Kubernetes Deployments, OpenShift uses the notion of `DeploymentConfigs`.
+
+You can take a look at the link:deploymentconfig.json[deploymentconfig.json] file, bundled in this directory, to get an idea about how it goes.
+
+Once you are ready, please feel free to deploy to your cluster:
+
+[source, bash]
+----
+oc apply -f deploymentconfig.json
+----
+
+You can then check the running pods in the project Overview to see the pods come up.
+
+In addition, it's worth keeping in mind that `DeploymentConfigs` offer some nice additional features, on top of the functionality in Kubernetes `Deployments`:
+
+* Triggers
+* Lifecycle Hooks
+
+Let's take a quick look at each one below.
+
+== Triggers
+
+DeploymentConfig triggers allow you to define exactly when a new deployment is automatically initiated, after some particular action.
+
+
+----
+    ...
+    "triggers": [
+      {
+        "type": "ImageChange", <1>
+        "imageChangeParams": {
+          "automatic": false,
+          "containerNames": [
+            "php-helloworld"
+          ],
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "php-helloworld:latest"
+          }
+        }
+      },
+      {
+        "type": "ConfigChange"  <2>
+      },
+      {
+        "type": "GitHub", <3>
+        ...
+      }
+    ]
+    ...
+----
+1. this means a new deployment will happen every time the ImageStream is updated.
+2. this means a change in the configuration options of the `DeploymentConfig` will trigger a new deployment.
+3. there is also a webhook trigger, meaning a new deployment can be triggered by any external system (e.g. GitHub / GitLab / etc.)
+
+== Lifecycle Hooks
+
+Depending on the deployment strategy you choose, you can have lifecycle hooks at your disposal, allowing you to execute some arbitrary commands before and after a pod is started.
+
+This is useful if your deployment requires running some manual tasks before you start your application, as these tasks can now be automated as part of the deployment itself, without requiring any manual intervention.
+
+In addition, lifecycle hooks can be used to execute some pre/post deployment checks, since you can act upon the failure of the hook-invoked command to abort the release, leveraging the `failurePolicy: Abort` behaviour.
+
+Here is an example of a `pre` lifecycle hook:
+
+[source, yaml]
+----
+  strategy:
+    type: Rolling
+    rollingParams:
+      pre:
+        failurePolicy: Abort
+        execNewPod:
+          containerName: helloworld
+          command: [ "/usr/bin/command", "arg1", "arg2" ]
+          env:
+            - name: CUSTOM_VAR1
+              value: custom_value1
+          volumes:
+            - data
+----
+
+You can read more about Lifecycle Hooks https://docs.okd.io/latest/dev_guide/deployments/deployment_strategies.html#lifecycle-hooks[here].
+
