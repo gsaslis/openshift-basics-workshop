@@ -36,10 +36,3 @@ crontab -e
 ----
 oc new-app -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/application-template.json
 ----
-
-
-
-
-== GitLab
-
-https://gitlab.com/gitlab-org/omnibus-gitlab/tree/f04b5c4443b3a98011577cdd7c9de766a287531e/docker/openshift
